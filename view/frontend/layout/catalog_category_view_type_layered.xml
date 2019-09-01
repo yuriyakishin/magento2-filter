@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Yu_Filter::css/styles.css"/>
+    </head>
+    <body>
+        <referenceBlock name="catalog.navigation.state" template="Yu_Filter::layer/state.phtml"/>
+        <referenceBlock name="catalog.navigation.renderer" template="Yu_Filter::layer/filter.phtml"/>
+    </body>
+</page>

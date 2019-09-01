@@ -1,0 +1,62 @@
+<?php
+/**
+ * Template for filter items block
+ *
+ * @var $block \Magento\LayeredNavigation\Block\Navigation\FilterRenderer
+ */
+?>
+
+<ol class="items">
+    <?php foreach ($filterItems as $filterItem): 
+        
+        if($filterItem->getValue() == 0) {
+            continue;
+        }
+        
+        $colorLabel = '';
+        if($filterItem->getFilter()->getRequestVar() == 'yu_colors') {
+            $colorLabel = '<span class="yu-filter-color" style="color:'.$filterItem->getData('label_backend').';background-color:'.$filterItem->getData('label_backend').'">|</span>';
+        }
+        ?>
+        <li class="item">
+            <?php if ($filterItem->getCount() > 0 || $filterItem->getData('selected') == 1): 
+                ?>
+                <input type="checkbox" 
+                        <?php if($filterItem->getData('selected')) echo 'checked="checked"';?>
+                           onclick="javascript: document.location.href='<?php
+                        if($filterItem->getData('selected')) {
+                            echo $block->escapeUrl($filterItem->getRemoveUrl());
+                        } else {
+                            echo $block->escapeUrl($filterItem->getUrl());
+                        }
+                        ?>'" />
+                <?php echo $colorLabel; ?>
+                <a class="swatch-option-link-layered" href="<?php
+                        if($filterItem->getData('selected')) {
+                            echo $block->escapeUrl($filterItem->getRemoveUrl());
+                        } else {
+                            echo $block->escapeUrl($filterItem->getUrl());
+                        }
+                        ?>">
+                    
+                    
+                    <?= /* @escapeNotVerified */ $filterItem->getLabel() ?>
+                    <?php if ($this->helper('\Magento\Catalog\Helper\Data')->shouldDisplayProductCountOnLayer()): ?>
+                        <span class="count"><?= /* @escapeNotVerified */ $filterItem->getCount() ?><span class="filter-count-label">
+                                <?php if ($filterItem->getCount() == 1): ?> <?= /* @escapeNotVerified */ __('item') ?><?php else: ?> <?= /* @escapeNotVerified */ __('items') ?><?php endif; ?></span></span>
+                    <?php endif; ?>
+                </a>
+            <?php else: ?>
+
+                <input type="checkbox" disabled="disabled" />
+                <?php echo $colorLabel; ?>
+                <?= /* @escapeNotVerified */ $filterItem->getLabel() ?>
+                <?php if ($this->helper('\Magento\Catalog\Helper\Data')->shouldDisplayProductCountOnLayer()): ?>
+                    <span class="count"><?= /* @escapeNotVerified */ $filterItem->getCount() ?><span class="filter-count-label">
+                            <?php if ($filterItem->getCount() == 1): ?> <?= /* @escapeNotVerified */ __('item') ?><?php else: ?> <?= /* @escapeNotVerified */ __('items') ?><?php endif; ?></span></span>
+                        <?php endif; ?>
+
+            <?php endif; ?>
+        </li>
+    <?php endforeach ?>
+</ol>
