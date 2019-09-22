@@ -28,6 +28,11 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     protected $scopeConfig;
 
     /**
+     * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
+     */
+    private $productCollectionFactory;
+
+    /**
      * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
@@ -44,6 +49,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
         \Magento\Framework\Filter\StripTags $tagFilter,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
         array $data = []
     )
     {
@@ -57,8 +63,9 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             $data
         );
 
-        $this->attribute   = $this->getAttributeModel();
-        $this->scopeConfig = $scopeConfig;
+        $this->attribute                = $this->getAttributeModel();
+        $this->scopeConfig              = $scopeConfig;
+        $this->productCollectionFactory = $productCollectionFactory;
     }
 
     /**
@@ -206,7 +213,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     if ($attributeCode != $this->attribute->getAttributeCode()) {
                         if ($attributeData['backend_model'] == 'varchar' || $attributeData['backend_model'] == 'text') {
                             $_attributeData = [];
-                            foreach($attributeData['value'] as $_value) {
+                            foreach ($attributeData['value'] as $_value) {
                                 $_attributeData[] = [
                                     'finset' => $_value
                                 ];
@@ -246,13 +253,8 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
      */
     public function getNewCollection($optionValue)
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory */
-        $productCollectionFactory = $objectManager->get('\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory');
-
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
-        $collection = $productCollectionFactory->create();
+        $collection = $this->productCollectionFactory->create();
         $collection->addStoreFilter();
         $collection->addCategoryFilter($this->getLayer()->getCurrentCategory());
 
