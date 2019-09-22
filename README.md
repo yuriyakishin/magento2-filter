@@ -2,10 +2,7 @@
 Magento2 Yu_Filter is multifiltration module with colors attribute for simple products. 
 ## Installation
 
-```
-$ composer require "yuriyakishin/magento2-filter"
-```
-or copy files of module to folder `app/code/Yu/Filter`.
+Copy files of module to folder `app/code/Yu/Filter`.
 
 Run these commands in your terminal:
 
