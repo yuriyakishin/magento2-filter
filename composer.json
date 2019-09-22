@@ -1,5 +1,5 @@
 {
-    "name": "yu/filter",
+    "name": "yuriyakishin/magento2-filter",
     "description": "Multifilter for product attributes",
     "type": "magento2-module",
     "version": "1.0.0",
