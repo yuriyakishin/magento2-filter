@@ -183,25 +183,25 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
 
         if ($isAttributeFilterable) {
 
-            /*             * ***************** for AND filter ************************ */
+            /****************** AND filter *************************/
             if ($this->scopeConfig->getValue(Config::XML_PATH_FILTER_TYPE_FIELD) == Config::XML_PATH_FILTER_TYPE_AND) {
 
                 if ($count === 0) {
 
                     $collection = $this->getNewCollection($value);
 
-                    if ($collection->count() == 0) {
+                    if ($collection->getSize() == 0) {
                         return;
                     }
                 }
             }
 
-            /*             * ***************** for OR filter ************************ */
+            /****************** OR filter *************************/
             if ($this->scopeConfig->getValue(Config::XML_PATH_FILTER_TYPE_FIELD) == Config::XML_PATH_FILTER_TYPE_OR) {
 
                 $collection = $this->getNewCollection($value);
 
-                if ($collection->count() == 0) {
+                if ($collection->getSize() == 0) {
                     return;
                 }
 
@@ -225,7 +225,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     }
                 }
 
-                $count = $collection->count();
+                $count = $collection->getSize();
             }
         }
 

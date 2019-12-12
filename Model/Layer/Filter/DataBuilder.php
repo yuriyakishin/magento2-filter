@@ -4,7 +4,6 @@ namespace Yu\Filter\Model\Layer\Filter;
 
 class DataBuilder extends \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder
 {
-
     /**
      * Array of items data
      * array(
@@ -12,13 +11,15 @@ class DataBuilder extends \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder
      *          'label' => $label,
      *          'value' => $value,
      *          'count' => $count,
-     *          'selected' => $selected
+     *          'selected' => $selected,
+     *          'label_backend' => $labelBackend
      *      )
      * )
      *
      * @return array
+     * 
+     * protected $_itemsData = [];
      */
-    protected $_itemsData = [];
 
     /**
      * Add Item Data

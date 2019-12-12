@@ -2,7 +2,7 @@
     "name": "yuriyakishin/magento2-filter",
     "description": "Multifilter for product attributes",
     "type": "magento2-module",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": [
         "OSL-3.0",
         "AFL-3.0"
@@ -12,6 +12,7 @@
             "name": "Yuriy Akishin",
             "homepage": "https://github.com/YuriyAkishin",
             "email": "yuriy.akishin@gmail.com",
+            "skype": "yuriy-a76",
             "role": "Developer"
         }
     ],
