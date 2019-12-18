@@ -18,10 +18,10 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\UrlInterface $url,
-        \Magento\Theme\Block\Html\Pager $htmlPagerBlock,
-        \Magento\Framework\App\RequestInterface $request,
-        array $data = []
+            \Magento\Framework\UrlInterface $url,
+            \Magento\Theme\Block\Html\Pager $htmlPagerBlock,
+            \Magento\Framework\App\RequestInterface $request,
+            array $data = []
     )
     {
         parent::__construct($url, $htmlPagerBlock, $data);
@@ -35,21 +35,22 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
      */
     public function getUrl()
     {
-        $paramName       = $this->getFilter()->getRequestVar();
-        $paramValue      = $this->request->getParam($paramName, null);
+        $paramName = $this->getFilter()->getRequestVar();
+        $paramValue = $this->request->getParam($paramName, null);
         $paramValueArray = [];
 
 
 
         if (!empty($paramValue)) {
             $paramValueArray = explode(',', $paramValue);
-            foreach ($paramValueArray as $_param) {
+            foreach ($paramValueArray as $_param)
+            {
                 
             }
         }
 
         $paramValueArray[] = $this->getValue();
-        $paramNewValue     = implode(',', $paramValueArray);
+        $paramNewValue = implode(',', $paramValueArray);
 
         $query = [
             $paramName                               => $paramNewValue,
@@ -66,14 +67,15 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
      */
     public function getRemoveUrl()
     {
-        $paramName          = $this->getFilter()->getRequestVar();
-        $paramValue         = $this->request->getParam($paramName, null);
-        $paramValueArray    = [];
+        $paramName = $this->getFilter()->getRequestVar();
+        $paramValue = $this->request->getParam($paramName, null);
+        $paramValueArray = [];
         $paramNewValueArray = [];
 
         if (!empty($paramValue)) {
             $paramValueArray = explode(',', $paramValue);
-            foreach ($paramValueArray as $_param) {
+            foreach ($paramValueArray as $_param)
+            {
                 if ($_param == $this->getValue()) {
                     continue;
                 }
@@ -85,11 +87,15 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
 
         $query = [$paramName => $paramNewValue];
 
-        $params['_current']     = true;
+        if ($this->getFilter()->getRequestVar() === 'price') {
+            $query = [$this->getFilter()->getRequestVar() => null];
+        }
+
+        $params['_current'] = true;
         $params['_use_rewrite'] = true;
-        $params['_query']       = $query;
-        $params['_escape']      = true;
-        
+        $params['_query'] = $query;
+        $params['_escape'] = true;
+
         return $this->_url->getUrl('*/*/*', $params);
     }
 

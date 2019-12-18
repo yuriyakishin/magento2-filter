@@ -190,7 +190,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
 
                     $collection = $this->getNewCollection($value);
 
-                    if ($collection->getSize() == 0) {
+                    if ($collection->getSize() === 0) {
                         return;
                     }
                 }
@@ -201,7 +201,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
 
                 $collection = $this->getNewCollection($value);
 
-                if ($collection->getSize() == 0) {
+                if ($collection->getSize() === 0 && $count === 0) {
                     return;
                 }
 
@@ -225,7 +225,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     }
                 }
 
-                $count = $collection->getSize();
+                $count = $count ?: $collection->getSize();
             }
         }
 
