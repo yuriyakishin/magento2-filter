@@ -43,28 +43,28 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
      * @param array $data
      */
     public function __construct(
-        \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Catalog\Model\Layer $layer,
-        \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
-        \Magento\Framework\Filter\StripTags $tagFilter,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        array $data = []
+            \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory,
+            \Magento\Store\Model\StoreManagerInterface $storeManager,
+            \Magento\Catalog\Model\Layer $layer,
+            \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder,
+            \Magento\Framework\Filter\StripTags $tagFilter,
+            \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+            \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
+            array $data = []
     )
     {
 
         parent::__construct(
-            $filterItemFactory,
-            $storeManager,
-            $layer,
-            $itemDataBuilder,
-            $tagFilter,
-            $data
+                $filterItemFactory,
+                $storeManager,
+                $layer,
+                $itemDataBuilder,
+                $tagFilter,
+                $data
         );
 
-        $this->attribute                = $this->getAttributeModel();
-        $this->scopeConfig              = $scopeConfig;
+        $this->attribute = $this->getAttributeModel();
+        $this->scopeConfig = $scopeConfig;
         $this->productCollectionFactory = $productCollectionFactory;
     }
 
@@ -116,12 +116,13 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         // add attributes to filter
         $productCollection->addFieldToFilter($this->attribute->getAttributeCode(), ['in' => $attributeValueArray]);
 
-        foreach ($attributeValueArray as $attributeValue) {
+        foreach ($attributeValueArray as $attributeValue)
+        {
             // add attributes to state
             $label = $this->getOptionText($attributeValue);
             $this->getLayer()
-                ->getState()
-                ->addFilter($this->_createItem($label, $attributeValue));
+                    ->getState()
+                    ->addFilter($this->_createItem($label, $attributeValue));
         }
 
         return $this;
@@ -136,8 +137,8 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     protected function _getItemsData()
     {
         /** @var \Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection $productCollection */
-        $productCollection  = $this->getLayer()
-            ->getProductCollection();
+        $productCollection = $this->getLayer()
+                ->getProductCollection();
         $optionsFacetedData = $productCollection->getFacetedData($this->attribute->getAttributeCode());
 
         $isAttributeFilterable = $this->getAttributeIsFilterable($this->attribute) === static::ATTRIBUTE_OPTIONS_ONLY_WITH_RESULTS;
@@ -150,8 +151,10 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
 
         $optionsBackend = $this->attribute->setData('store_id', 0)->getSource()->getAllOptions();
 
-        foreach ($options as $option) {
-            foreach ($optionsBackend as $optionBackend) {
+        foreach ($options as $option)
+        {
+            foreach ($optionsBackend as $optionBackend)
+            {
                 $option['label_backend'] = '';
                 if ($option['value'] == $optionBackend['value']) {
                     $option['label_backend'] = $optionBackend['label'];
@@ -183,7 +186,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
 
         if ($isAttributeFilterable) {
 
-            /****************** AND filter *************************/
+            /* AND filter */
             if ($this->scopeConfig->getValue(Config::XML_PATH_FILTER_TYPE_FIELD) == Config::XML_PATH_FILTER_TYPE_AND) {
 
                 if ($count === 0) {
@@ -196,24 +199,28 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                 }
             }
 
-            /****************** OR filter *************************/
+            /* OR filter */
             if ($this->scopeConfig->getValue(Config::XML_PATH_FILTER_TYPE_FIELD) == Config::XML_PATH_FILTER_TYPE_OR) {
 
                 $collection = $this->getNewCollection($value);
 
-                if ($collection->getSize() === 0 && $count === 0) {
-                    return;
+                if ($count === 0) {
+                    if ($collection->getSize() === 0) {
+                        return;
+                    }
                 }
 
                 unset($collection);
 
                 $collection = $this->getNewCollection($value);
 
-                foreach (static::$selectedAttributes as $attributeCode => $attributeData) {
+                foreach (static::$selectedAttributes as $attributeCode => $attributeData)
+                {
                     if ($attributeCode != $this->attribute->getAttributeCode()) {
                         if ($attributeData['backend_model'] == 'varchar' || $attributeData['backend_model'] == 'text') {
                             $_attributeData = [];
-                            foreach ($attributeData['value'] as $_value) {
+                            foreach ($attributeData['value'] as $_value)
+                            {
                                 $_attributeData[] = [
                                     'finset' => $_value
                                 ];
@@ -225,7 +232,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     }
                 }
 
-                $count = $count ?: $collection->getSize();
+                $count = max($count, $collection->getSize());
             }
         }
 
@@ -237,11 +244,11 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         }
 
         $this->itemDataBuilder->addItemDataWithAdditionalParam(
-            strip_tags($option['label']),
-            $value,
-            $count,
-            $selected,
-            $option['label_backend']
+                strip_tags($option['label']),
+                $value,
+                $count,
+                $selected,
+                $option['label_backend']
         );
     }
 
@@ -301,12 +308,13 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
      */
     protected function _initItems()
     {
-        $data  = $this->_getItemsData();
+        $data = $this->_getItemsData();
         $items = [];
-        foreach ($data as $itemData) {
+        foreach ($data as $itemData)
+        {
             $items[] = $this->_createItem($itemData['label'], $itemData['value'], $itemData['count'])
-                ->setData('selected', $itemData['selected'])
-                ->setData('label_backend', $itemData['label_backend']);
+                    ->setData('selected', $itemData['selected'])
+                    ->setData('label_backend', $itemData['label_backend']);
         }
         $this->_items = $items;
         return $this;
