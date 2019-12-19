@@ -9,7 +9,7 @@
     <default>
         <catalog>
             <layered_navigation>
-                <yu_filter_type>and</yu_filter_type>
+                <yu_filter_type>or</yu_filter_type>
             </layered_navigation>
         </catalog>
     </default>
