@@ -210,9 +210,9 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                     }
                 }
 
-                unset($collection);
+                //unset($collection);
 
-                $collection = $this->getNewCollection($value);
+                //$collection = $this->getNewCollection($value);
 
                 foreach (static::$selectedAttributes as $attributeCode => $attributeData)
                 {
