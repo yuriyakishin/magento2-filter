@@ -33,6 +33,11 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     private $productCollectionFactory;
 
     /**
+     * @var \Magento\CatalogInventory\Helper\Stock
+     */
+    private $stockHelper;
+
+    /**
      * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
@@ -50,6 +55,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             \Magento\Framework\Filter\StripTags $tagFilter,
             \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
             \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
+            \Magento\CatalogInventory\Helper\Stock $stockHelper,
             array $data = []
     )
     {
@@ -66,6 +72,7 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         $this->attribute = $this->getAttributeModel();
         $this->scopeConfig = $scopeConfig;
         $this->productCollectionFactory = $productCollectionFactory;
+        $this->stockHelper = $stockHelper;
     }
 
     /**
@@ -211,7 +218,6 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
                 }
 
                 //unset($collection);
-
                 //$collection = $this->getNewCollection($value);
 
                 foreach (static::$selectedAttributes as $attributeCode => $attributeData)
@@ -264,6 +270,8 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         $collection = $this->productCollectionFactory->create();
         $collection->addStoreFilter();
         $collection->addCategoryFilter($this->getLayer()->getCurrentCategory());
+        
+        $this->stockHelper->addIsInStockFilterToCollection($collection);
 
         if ($this->attribute->getBackendType() == 'varchar' || $this->attribute->getBackendType() == 'text') {
             $collection->addAttributeToFilter($this->attribute->getAttributeCode(), ['finset' => $optionValue]);
