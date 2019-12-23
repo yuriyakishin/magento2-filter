@@ -38,13 +38,21 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
     private $stockHelper;
 
     /**
+     * @var \Magento\Catalog\Model\Category
+     */
+    private $currentCategory;
+
+    /** 
      * @param \Magento\Catalog\Model\Layer\Filter\ItemFactory $filterItemFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\Layer $layer
      * @param \Magento\Catalog\Model\Layer\Filter\Item\DataBuilder $itemDataBuilder
      * @param \Magento\Framework\Filter\StripTags $tagFilter
-     * @param \Magento\Catalog\Model\Layer\FilterList $filterList
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
+     * @param \Magento\CatalogInventory\Helper\Stock $stockHelper
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Catalog\Model\Layer\Filter\DataProvider\CategoryFactory $categoryDataProviderFactory
      * @param array $data
      */
     public function __construct(
@@ -56,6 +64,8 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
             \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
             \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
             \Magento\CatalogInventory\Helper\Stock $stockHelper,
+            \Magento\Framework\App\RequestInterface $request,
+            \Magento\Catalog\Model\Layer\Filter\DataProvider\CategoryFactory $categoryDataProviderFactory,
             array $data = []
     )
     {
@@ -73,6 +83,14 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         $this->scopeConfig = $scopeConfig;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->stockHelper = $stockHelper;
+        
+        if (!empty($request->getParam('cat'))) {
+            $categoryDataProvider = $categoryDataProviderFactory->create(['layer' => $layer]);
+            $categoryDataProvider->setCategoryId($request->getParam('cat'));
+            $this->currentCategory = $categoryDataProvider->getCategory();
+        } else {
+            $this->currentCategory = $layer->getCurrentCategory();
+        }
     }
 
     /**
@@ -269,8 +287,8 @@ class Attribute extends \Magento\CatalogSearch\Model\Layer\Filter\Attribute
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
         $collection = $this->productCollectionFactory->create();
         $collection->addStoreFilter();
-        $collection->addCategoryFilter($this->getLayer()->getCurrentCategory());
-        
+        $collection->addCategoryFilter($this->currentCategory);
+
         $this->stockHelper->addIsInStockFilterToCollection($collection);
 
         if ($this->attribute->getBackendType() == 'varchar' || $this->attribute->getBackendType() == 'text') {
