@@ -42,7 +42,7 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
 
 
         if (!empty($paramValue)) {
-            $paramValueArray = explode(',', $paramValue);
+            $paramValueArray = explode('-', $paramValue);
             foreach ($paramValueArray as $_param)
             {
                 
@@ -50,7 +50,7 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
         }
 
         $paramValueArray[] = $this->getValue();
-        $paramNewValue = implode(',', $paramValueArray);
+        $paramNewValue = implode('-', $paramValueArray);
 
         $query = [
             $paramName                               => $paramNewValue,
@@ -73,7 +73,7 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
         $paramNewValueArray = [];
 
         if (!empty($paramValue)) {
-            $paramValueArray = explode(',', $paramValue);
+            $paramValueArray = explode('-', $paramValue);
             foreach ($paramValueArray as $_param)
             {
                 if ($_param == $this->getValue()) {
@@ -83,7 +83,7 @@ class Item extends \Magento\Catalog\Model\Layer\Filter\Item
             }
         }
 
-        $paramNewValue = implode(',', $paramNewValueArray);
+        $paramNewValue = implode('-', $paramNewValueArray);
 
         $query = [$paramName => $paramNewValue];
 
